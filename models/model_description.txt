@@ -1,0 +1,25 @@
+asvspoof_cnn.pt
+  Trained weights for ASVSpoofCNN (base model, trained from scratch / random initialization,
+  no pretrained weights).
+  Architecture: 4-block 2D CNN over 128-band log-mel spectrograms.
+    Block 1: Conv2d(1,16,3,pad=1)   -> BatchNorm2d(16)  -> ReLU -> MaxPool2d(2) -> Dropout2d
+    Block 2: Conv2d(16,32,3,pad=1)  -> BatchNorm2d(32)  -> ReLU -> MaxPool2d(2) -> Dropout2d
+    Block 3: Conv2d(32,64,3,pad=1)  -> BatchNorm2d(64)  -> ReLU -> MaxPool2d(2) -> Dropout2d
+    Block 4: Conv2d(64,128,3,pad=1) -> BatchNorm2d(128) -> ReLU -> AdaptiveAvgPool2d(1)
+    Classifier: Dropout -> Linear(128, 2)
+  Total / trainable parameters: 97,890
+  Trained: 22 epochs run, best epoch 17 (early stopping, best weights restored)
+  Test set (EER operating point): accuracy 91.20%, spoof F1 94.90%, ROC-AUC 0.9669, EER 8.80%
+
+asvspoof_cnn_finetuned.pt
+  Same ASVSpoofCNN architecture, weights after a second fine-tuning stage starting from
+  asvspoof_cnn.pt with a reduced learning rate (LR x 0.1).
+  Trained: 12 epochs run, best epoch 7 (early stopping, best weights restored)
+  Test set (EER operating point): accuracy 91.69%, spoof F1 95.19%, ROC-AUC 0.9676, EER 8.31%
+
+Both checkpoints are raw PyTorch state_dicts saved with torch.save(model.state_dict(), ...).
+The ASVSpoofCNN class is defined in notebooks/asvspoof2019_la_cnn_128mel_4conv_ASVSpoofCNN.ipynb
+(model definition cell). Load with:
+  model = ASVSpoofCNN()
+  model.load_state_dict(torch.load("asvspoof_cnn_finetuned.pt", map_location="cpu"))
+  model.eval()

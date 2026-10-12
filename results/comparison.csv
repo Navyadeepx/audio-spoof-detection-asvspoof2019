@@ -1,0 +1,7 @@
+model,accuracy,precision,recall,f1,eer_pct,auc,parameters
+LFCC + GMM (ASVspoof2019 baseline B1) -- classical baseline,NR,NR,NR,NR,15.8,NR,"NR (GMM, non-DL)"
+LFCC + LCNN -- CNN-based reference architecture,NR,NR,NR,NR,9.26,NR,NR
+RawNet2 -- published deep-learning system,NR,NR,NR,NR,9.5,NR,17.6M (Truong et al. 2025 re-implementation)
+AASIST -- published deep-learning system (current SOTA on this benchmark),NR,NR,NR,NR,0.83,NR,0.30M (Jung et al. 2022)
+"Proposed: ASVSpoofCNN (4-conv, 128-mel)",0.912,0.989,0.912,0.949,8.8,0.9669,97890
+"Proposed: ASVSpoofCNN (4-conv, 128-mel), fine-tuned",0.9169,0.9897,0.9169,0.9519,8.31,0.9676,97890

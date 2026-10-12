@@ -1,0 +1,4 @@
+split,n_bonafide,n_spoof,total,pct_bonafide,pct_spoof,imbalance_ratio_spoof_to_bonafide
+train,2580,22800,25380,10.17,89.83,8.84
+validation,2548,22296,24844,10.26,89.74,8.75
+test,7355,63882,71237,10.32,89.68,8.69

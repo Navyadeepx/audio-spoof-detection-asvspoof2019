@@ -1,0 +1,3 @@
+tag,epochs_run,best_epoch,total_train_time_sec,avg_time_per_epoch_sec,device,total_params,trainable_params
+ASVSpoofCNN,22,17,318.07,14.46,cuda,97890,97890
+ASVSpoofCNN-FT,12,7,172.96,14.41,cuda,97890,97890

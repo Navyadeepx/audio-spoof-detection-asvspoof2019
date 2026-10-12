@@ -1,0 +1,11 @@
+hyperparameter,final_value,values_tried,reason_for_choice
+Learning rate (initial),0.001,"1e-2, 1e-3, 1e-4",1e-2 diverged early; 1e-4 converged too slowly within MAX_EPOCHS; 1e-3 gave stable loss decrease with Adam.
+Learning rate (fine-tune),0.0001,"LR*0.1, LR*0.01",LR*0.1 let the fine-tune stage keep improving val_loss without destabilizing the pretrained weights.
+Batch size,32.0,"16, 32, 64","32 balanced GPU memory usage and gradient noise; 16 was noisier, 64 gave marginal speed gain but worse val loss."
+N_MELS,128.0,"64, 128",128 mel bands captured more spectral detail and improved val accuracy over 64; adopted as the current experiment config.
+Dropout probability,0.3,"0.2, 0.3, 0.5",0.3 reduced the train/val loss gap versus 0.2 without the underfitting seen at 0.5.
+Weight decay (L2),0.0001,"1e-3, 1e-4, 1e-5",1e-4 gave the best val performance; 1e-3 over-regularized and raised train loss.
+L1 lambda,1e-05,"1e-4, 1e-5, 0",1e-5 added mild sparsity pressure without measurably hurting accuracy.
+Early stopping patience,5.0,"3, 5, 8",5 epochs avoided stopping on short-term val_loss noise while still limiting overfitting time.
+K-fold CV folds,5.0,"3, 5",5-fold gave a stable bias/variance estimate without excessive extra training time.
+Max epochs,30.0,"20, 30, 50",30 was enough for early stopping to trigger in all runs observed; 50 rarely trained longer in practice.
