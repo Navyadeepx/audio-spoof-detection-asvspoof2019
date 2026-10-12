@@ -1,0 +1,17 @@
+python==3.13.5
+torch==2.11.0+cu128
+torchaudio==2.11.0+cu128
+torchvision==0.26.0+cu128
+numpy==2.3.2
+pandas==2.3.2
+scikit-learn==1.7.2
+librosa==1.0.0
+soundfile==0.14.0
+matplotlib==3.10.5
+tqdm==4.67.1
+
+# torch/torchaudio/torchvision built for CUDA 12.8 (+cu128).
+# matplotlib-inline was installed from a local conda build path in the
+# original environment (Windows/conda) and is a Jupyter/IPython display
+# dependency, not something the training code itself imports, so it's
+# omitted here.
