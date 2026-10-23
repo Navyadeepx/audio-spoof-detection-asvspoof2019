@@ -1,0 +1,2 @@
+tag,epochs_run,best_epoch,total_train_time_sec,avg_time_per_epoch_sec,device,total_params,trainable_params
+Hybrid-stage1,6,1,172.06,28.68,cuda,915150,617284

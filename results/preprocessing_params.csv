@@ -1,0 +1,10 @@
+parameter,value,unit
+Sample rate (SR),16000,Hz
+Clip duration,4,seconds
+Fixed waveform length,64000,samples
+Number of mel bands (N_MELS),128,bands
+Feature type,Log-mel spectrogram,-
+Mono conversion,channel-averaged if multi-channel,-
+AASIST raw-waveform length,64600,"samples (first 64600, repeat-padded if shorter, as in official AASIST)"
+Waveform cache dtype,int16 (memory-mapped),-
+Resampling,librosa.resample to SR if source sr differs,-

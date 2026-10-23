@@ -1,0 +1,7 @@
+model,accuracy,precision,recall,f1,eer_pct,auc,parameters
+LFCC + GMM (ASVspoof2019 baseline B1) -- classical baseline,NR,NR,NR,NR,15.8,NR,"NR (GMM, non-DL)"
+LFCC + LCNN -- CNN-based reference architecture,NR,NR,NR,NR,9.26,NR,NR
+RawNet2 -- published deep-learning system,NR,NR,NR,NR,9.5,NR,17.6M (Truong et al. 2025 re-implementation)
+AASIST -- as published (authors' own pipeline),NR,NR,NR,NR,0.83,NR,0.30M (Jung et al. 2022)
+AASIST pretrained -- this notebook's pipeline/test split,0.992,0.9991,0.992,0.9955,0.8,0.9993,297866
+"Proposed: AudioTransformer + AASIST (stage 1, AASIST frozen)",0.9917,0.9991,0.9917,0.9954,0.83,0.9993,915150

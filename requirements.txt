@@ -1,0 +1,32 @@
+python==3.13.5
+
+torch==2.11.0+cu128
+
+torchaudio==2.11.0+cu128
+
+torchvision==0.26.0+cu128
+
+numpy==2.3.2
+
+pandas==2.3.2
+
+scikit-learn==1.7.2
+
+librosa==1.0.0
+
+soundfile==0.14.0
+
+matplotlib==3.10.5
+
+tqdm==4.67.1
+
+pyarrow
+
+# torch/torchaudio/torchvision built for CUDA 12.8 (+cu128).
+# pyarrow is needed by pandas.read_parquet (the train/validation/test splits are
+# parquet files). It is left unpinned because the exact version used in the
+# original environment was not recorded -- pin it to your installed version.
+# The AASIST model code and pretrained weights are downloaded by the notebook
+# from https://github.com/clovaai/aasist (models/AASIST.py, models/weights/AASIST.pth).
+# matplotlib-inline is a Jupyter/IPython display dependency, not imported by
+# the training code, so it is omitted here.

@@ -1,0 +1,15 @@
+hyperparameter,final_value,values_tried,reason_for_choice
+LR stage 1 (transformer + fusion),0.0003,initial setting (not tuned),Pre-norm transformers train stably at ~3e-4 with AdamW + warm-up; 1e-3 (used for the CNN) is usually too high for attention layers.
+LR stage 2 (transformer + fusion),3e-05,initial setting (not tuned); stage 2 defined in config but not run in this submission,"LR*0.1, same fine-tune ratio as the CNN notebook."
+LR stage 2 (AASIST),1e-05,initial setting (not tuned); stage 2 defined in config but not run in this submission,Official AASIST trains at 1e-4 -> 5e-6 (cosine); a smaller LR preserves the pretrained weights while adapting them to the fused objective.
+Batch size,24,initial setting (not tuned),24 is AASIST's official batch size; raw-waveform branch dominates GPU memory.
+N_MELS,128,"64, 128 (CNN experiments)",128 bands gave better val accuracy than 64 for the CNN; reused here.
+d_model / heads / layers / FF,128/4/4/256,initial setting (not tuned),Small encoder (~0.56M params) comparable in size to AASIST (~0.30M) so neither branch swamps the other.
+"Patch size (mel, frames)","(16, 8)",initial setting (not tuned),"AST-style patches; gives 120 tokens for a 128x126 spectrogram, cheap for self-attention."
+Dropout probability,0.3,"0.2, 0.3, 0.5 (CNN experiments)",0.3 gave the best train/val trade-off for the CNN; reused for the transformer and fusion head.
+Weight decay (AdamW),0.0001,"1e-3, 1e-4, 1e-5 (CNN experiments)",1e-4 (also AASIST's official value). Not applied to biases / norms / pos-embed / CLS.
+L1 lambda (transformer branch),1e-05,"1e-4, 1e-5, 0 (CNN experiments)",Mild sparsity pressure; restricted to the new transformer so pretrained AASIST weights are not pulled toward zero.
+Auxiliary loss weight,0.3,initial setting (not tuned),Keeps each branch individually discriminative so the fusion head cannot rely on just one.
+SpecAugment masks (freq/time),16/16,initial setting (not tuned),Regularises the transformer branch against the train->eval attack mismatch in ASVspoof2019 LA.
+Early stopping patience,5,"3, 5, 8 (CNN experiments)",5 epochs avoided stopping on val_loss noise.
+K-fold CV folds,5,"3, 5 (CNN experiments)",5-fold gave a stable estimate.

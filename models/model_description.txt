@@ -1,0 +1,37 @@
+Model: Hybrid AudioTransformer + pretrained AASIST (ResidualHybrid), stage 1
+File : hybrid_transformer_aasist_stage1.pt  (state_dict, ~3.8 MB)
+
+Architecture
+- AudioTransformer (built in the notebook with torch.nn.TransformerEncoder), input = 128-mel log-mel spectrogram (1 x 128 x 126)
+    Patch embedding Conv2d(1, 128, kernel=(16, 8), stride=(16, 8)) -> 120 tokens
+    + learned [CLS] token + learned positional embedding (121 x 128), Dropout(0.3)
+    4 x TransformerEncoderLayer (d_model=128, 4 heads, FF=256, GELU, pre-norm, dropout 0.3) + final LayerNorm
+    Pooling: concat([CLS], mean of patch tokens) -> 256-d embedding
+    SpecAugment (train only): 2 frequency masks (<=16 bins) + 2 time masks (<=16 frames)
+- AASIST (official clovaai/aasist model + released pretrained weights), input = raw waveform (64,600 samples), frozen in stage 1
+    -> 160-d embedding + 2 logits
+- Fusion: LayerNorm(416) -> Dropout -> Linear(416,128) -> GELU -> Dropout -> Linear(128,2)
+- Residual fusion: final logits = AASIST logits (index-swapped so 1 = spoof) + fusion output.
+  The last fusion layer is zero-initialised, so training starts exactly at pretrained-AASIST behaviour.
+- Auxiliary head Linear(256,2) on the transformer embedding (training only, loss weight 0.3)
+
+Parameters: 915,150 total | 617,284 trainable (AASIST frozen)
+  transformer branch 562,304 | AASIST branch 297,866 | fusion + aux heads 54,980
+Pretrained component: AASIST only (clovaai/aasist). The transformer and fusion head are trained from random initialisation.
+Labels: 0 = bonafide, 1 = spoof (AASIST itself uses 1 = bonafide; the model code swaps its two logits).
+Checkpoint contents: transformer.*, trans_head.*, fusion.*, aasist.* (the frozen AASIST weights are included).
+
+How to load
+1. Open notebooks/asvspoof2019_la_transformer_aasist_hybrid.ipynb and run the Config, AASIST-fetch (fetch_aasist),
+   AudioTransformer / HybridTransformerAASIST and ResidualHybrid cells. These define the classes and download
+   models/AASIST.py + AASIST.pth from the official repo. N_FRAMES must be 126 (4 s clip, 128 mel bands).
+2. Then:
+       import torch
+       model = ResidualHybrid()
+       model.load_state_dict(torch.load("models/hybrid_transformer_aasist_stage1.pt", map_location="cpu"))
+       model.eval()
+3. Inference: model(mel, wave) in eval mode returns the 2 fused logits.
+       mel  : (B, 1, 128, 126) float32, per-clip log-mel normalised to zero mean / unit std
+       wave : (B, 64600) float32 in [-1, 1)
+   Spoof score = softmax(logits)[:, 1].
+   (With model.use_cached_aasist = True, 'wave' is instead the cached AASIST output [160-d embedding | 2 logits].)
